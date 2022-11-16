@@ -7,6 +7,7 @@ date: "2022-11-13"
 ```{r}
 library(tidyverse)
 library(knitr)
+library(purrr)
 ```
 
 ```{r}
@@ -42,3 +43,11 @@ bm_conf_high
   
 ```
 
+```{r}
+prop_test= new_hom_data %>%
+  mutate(output=map2(.x = unsolve_obs, .y = total_hom, ~prop.test(x=.x,n=.y)),
+         tidy=map(.x=output,~broom::tidy(.x)))%>%
+  select(-output) %>%
+  unnest(tidy) %>%
+  select(city_state, estimate, conf.low, conf.high)
+```
