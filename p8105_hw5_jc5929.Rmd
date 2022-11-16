@@ -123,7 +123,7 @@ sim_results_df %>%
   ggplot(aes(x=sample_mu,y=reject_prop))+geom_point()+geom_line()+
   labs(title = "Proportion of null hypothesis rejection for each true mean")
 ```
-According to the plot, power increases as effect size increases.
+According to the plot, power is positively related to effect size. The `effect size = (true mean - mu null)` will increase since the true mu increase from 1 to 6, and mu null also maintained to be 0. Thus, the power will increased and reached the highest value 1 when mu is 4.
 ```{r}
 reject_df=
   sim_results_df %>%
