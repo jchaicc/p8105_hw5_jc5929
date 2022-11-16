@@ -77,16 +77,12 @@ new_hom_data
 ```
 
 ```{r}
-bm_test=prop.test(new_hom_data%>%filter(city_state=="Baltimore, MD")%>%pull(unsolve_obs),
+prop.test(new_hom_data%>%filter(city_state=="Baltimore, MD")%>%pull(unsolve_obs),
           new_hom_data%>% filter(city_state=="Baltimore, MD")%>%pull(total_hom)) %>%
-  broom::tidy() 
+  broom::tidy()  %>%
+   select(estimate, conf.low, conf.high) %>%
+  knitr::kable()
 
-bm_est=bm_test%>%pull(estimate) 
-bm_est
-bm_conf_low=bm_test%>%pull(conf.low)
-bm_conf_low
-bm_conf_high=bm_test%>%pull(conf.high)
-bm_conf_high
   
 ```
 
