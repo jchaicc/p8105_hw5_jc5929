@@ -69,18 +69,41 @@ prop_test %>%
 ## Problem 3
 
 ```{r}
-sim_mean = function(n=30, mu , sigma = 5) {
+sim_mean = function(n=30, mu=0, sigma = 5) {
   
   sim_data = tibble(
     x = rnorm(n, mean = mu, sd = sigma),
   )
   
-  t_test=t.test(sim_data,mu)
+  t_test=t.test(sim_data,mean=mu)
   sim_data %>% 
     summarize(
       mu_hat = mean(x),
-      p_value= pull(broom::tidy(t_test,p.value))
+      p_value= pull(broom::tidy(t_test),p.value)
     )
 }
 
 ```
+
+```{r}
+output = vector("list", 5000)
+
+for (i in 1:5000) {
+  output[[i]] = sim_mean(mu=0)
+}
+
+sim_results = bind_rows(output)
+sim_results
+
+```
+
+```{r}
+sim_results_df = 
+  tibble(sample_size = c(1, 2, 3, 4,5,6)) %>% 
+  mutate(
+    output_lists = map(.x = sample_size, ~rerun(1000, sim_mean(mu = .x))),
+    estimate_dfs = map(output_lists, bind_rows)) %>% 
+  select(-output_lists) %>% 
+  unnest(estimate_dfs)
+```
+
