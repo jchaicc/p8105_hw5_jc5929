@@ -13,6 +13,14 @@ library(purrr)
 ## Problem 1
 
 ```{r}
+
+knitr::opts_chunk$set(
+  message = FALSE)
+```
+
+```
+
+```{r}
 full_df = 
   tibble(
     files = list.files("data/zip_data/"),
