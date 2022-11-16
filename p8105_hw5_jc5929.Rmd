@@ -10,6 +10,50 @@ library(knitr)
 library(purrr)
 ```
 
+## Problem 1
+
+```{r}
+full_df = 
+  tibble(
+    files = list.files("data/zip_data/"),
+    path = str_c("data/zip_data/", files)
+  ) %>% 
+  mutate(data = map(path, read_csv)) %>% 
+  unnest()
+```
+
+The result of the previous code chunk isn't tidy -- data are wide rather than long, and some important variables are included as parts of others. The code chunk below tides the data using string manipulations on the file, converting from wide to long, and selecting relevant variables. 
+
+```{r}
+tidy_df = 
+  full_df %>% 
+  mutate(
+    files = str_replace(files, ".csv", ""),
+    group = str_sub(files, 1, 3)) %>% 
+  pivot_longer(
+    week_1:week_8,
+    names_to = "week",
+    values_to = "outcome",
+    names_prefix = "week_") %>% 
+  mutate(week = as.numeric(week)) %>% 
+  select(group, subj = files, week, outcome)
+```
+
+Finally, the code chunk below creates a plot showing individual data, faceted by group. 
+
+```{r}
+tidy_df %>% 
+  ggplot(aes(x = week, y = outcome, group = subj, color = group)) + 
+  geom_point() + 
+  geom_path() + 
+  facet_grid(~group)
+```
+
+This plot suggests high within-subject correlation -- subjects who start above average end up above average, and those that start below average end up below average. Subjects in the control group generally don't change over time, but those in the experiment group increase their outcome in a roughly linear way. 
+
+
+## Problem 2
+
 ```{r}
 hom_df=read_csv("data/homicide-data.csv") %>%
   mutate(city_state=str_c(city,", ", state)) %>%
@@ -19,7 +63,6 @@ hom_df=read_csv("data/homicide-data.csv") %>%
 __Description on the raw dataset:__
 This dataset contains homicides data in 50 cities in the U.S. There were 12 variable describing the characteristics of each victim in the raw data, including their name, age, sex, and the disposition status. There were 52179 entries in total.
 
-## Problem 2
 ```{r}
 new_hom_data= hom_df %>%
   mutate(status=case_when(disposition=="Closed without arrest" ~ "unsolved",
