@@ -119,3 +119,26 @@ sim_results_df %>%
   ggplot(aes(x=sample_mu,y=reject_prop))+geom_point()+geom_line()+
   labs(title = "Proportion of null hypothesis rejection for each true mean")
 ```
+
+```{r}
+reject_df=
+  sim_results_df %>%
+  mutate(decision= case_when( p_value<0.05 ~ "reject",
+                              p_value>0.05 ~ "fail to reject")) %>%
+  filter(decision=="reject") %>%
+  group_by(sample_mu) %>%
+  summarize(ave_mu=mean(mu_hat))
+
+
+
+  sim_results_df %>%
+  mutate(decision= case_when( p_value<0.05 ~ "reject",
+                              p_value>0.05 ~ "fail to reject"))%>%
+  mutate(as.factor(sample_mu)) %>%
+  group_by(sample_mu)%>%
+  summarize(ave_mu=mean(mu_hat)) %>%
+  ggplot(aes(x=sample_mu,y=ave_mu))+geom_line()+geom_line(data=reject_df,color="red")
+  
+
+
+```
