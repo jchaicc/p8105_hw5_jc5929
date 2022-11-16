@@ -157,6 +157,6 @@ reject_df=
 
 When µ is smaller than 3, the average of µ-hat for which the sample where null is rejected is higher than  true value of µ. But µ gets larger, the average of µ-hat across tests where the null is rejected approaches the true value of µ.
 
- we can see the power is relatively low when µ is smaller than 3, which means the proportion of times the null was rejected is low. Therefore, for µ smaller than 3, the number of samples with rejected null is relatively small. These sample means indeed have more variation and their average is more likely to deviate from the true mean. However, as µ gets bigger, there are more samples with rejected null, so the sample average of µ-hat becomes more stable and yields a more unbiased estimation of the true mean.
+From the previous plot, we can see that the proportion of times the null was rejected is low. So for µ smaller than 3, the number of samples with rejected null is relatively small. These sample have more variation and their average is more likely to deviate from the true mean. However, as µ gets bigger, there are more samples that rejects null, so the sample average of µ-hat becomes more stable and yields a more unbiased estimation of the true mean.
 
  
