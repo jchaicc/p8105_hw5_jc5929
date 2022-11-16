@@ -5,5 +5,40 @@ date: "2022-11-13"
 ---
 
 ```{r}
-library()
+library(tidyverse)
+library(knitr)
 ```
+
+```{r}
+hom_df=read_csv("data/homicide-data.csv") %>%
+  mutate(city_state=str_c(city,", ", state)) %>%
+  filter(city_state != "Tulsa, AL")
+```
+
+```{r}
+new_hom_data= hom_df %>%
+  mutate(status=case_when(disposition=="Closed without arrest" ~ "unsolved",
+                          disposition=="Open/No arrest" ~ "unsolved",
+                          disposition=="Closed by arrest" ~ "solved")) %>%
+  select(city_state,status) %>%
+  group_by(city_state) %>%
+  summarize(total_hom=n(),
+            unsolve_obs=sum(status=="unsolved")) 
+new_hom_data
+
+```
+
+```{r}
+bm_test=prop.test(new_hom_data%>%filter(city_state=="Baltimore, MD")%>%pull(unsolve_obs),
+          new_hom_data%>% filter(city_state=="Baltimore, MD")%>%pull(total_hom)) %>%
+  broom::tidy() 
+
+bm_est=bm_test%>%pull(estimate) 
+bm_est
+bm_conf_low=bm_test%>%pull(conf.low)
+bm_conf_low
+bm_conf_high=bm_test%>%pull(conf.high)
+bm_conf_high
+  
+```
+
