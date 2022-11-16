@@ -15,6 +15,10 @@ hom_df=read_csv("data/homicide-data.csv") %>%
   mutate(city_state=str_c(city,", ", state)) %>%
   filter(city_state != "Tulsa, AL")
 ```
+
+__Description on the raw dataset:__
+This dataset contains homicides data in 50 cities in the U.S. There were 12 variable describing the characteristics of each victim in the raw data, including their name, age, sex, and the disposition status. There were 52179 entries in total.
+
 ## Problem 2
 ```{r}
 new_hom_data= hom_df %>%
@@ -119,7 +123,7 @@ sim_results_df %>%
   ggplot(aes(x=sample_mu,y=reject_prop))+geom_point()+geom_line()+
   labs(title = "Proportion of null hypothesis rejection for each true mean")
 ```
-
+According to the plot, power increases as effect size increases.
 ```{r}
 reject_df=
   sim_results_df %>%
@@ -142,3 +146,5 @@ reject_df=
 
 
 ```
+
+The average estimates of mu that rejected get closer to the true values of mu as effect size increases. Because power increases as effect size increases, it is more likely to reject null when effect size is large. In other words, amounts of mu that rejected get larger when effect size increases, which the average estimates of mu that rejected approaches average estimates of mu.
