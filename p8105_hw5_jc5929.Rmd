@@ -135,16 +135,28 @@ reject_df=
 
 
 
-  sim_results_df %>%
+  total_samp=sim_results_df %>%
   mutate(decision= case_when( p_value<0.05 ~ "reject",
                               p_value>0.05 ~ "fail to reject"))%>%
   mutate(as.factor(sample_mu)) %>%
   group_by(sample_mu)%>%
-  summarize(ave_mu=mean(mu_hat)) %>%
-  ggplot(aes(x=sample_mu,y=ave_mu))+geom_line()+geom_line(data=reject_df,color="red")
+  summarize(ave_mu=mean(mu_hat)) 
   
+  combine_df=bind_rows(list(a = total_samp, b = reject_df), .id = 'group')
+  
+  ggplot(combine_df)+
+  geom_line(aes(x = sample_mu, y = ave_mu, color = group))+
+  scale_color_manual(values = c("blue", "red"),
+    labels = c(expression("whole sample"), expression("sample for which null is rejected")))+
+    labs(x = "true value of µ", y = "average estimate of µ-hat",
+       title = "Average estimate of µ-hat vs. True value of µ")
+
 
 
 ```
 
-The average estimates of mu that rejected get closer to the true values of mu as effect size increases. Because power increases as effect size increases, it is more likely to reject null when effect size is large. In other words, amounts of mu that rejected get larger when effect size increases, which the average estimates of mu that rejected approaches average estimates of mu.
+When µ is smaller than 3, the average of µ-hat for which the sample where null is rejected is higher than  true value of µ. But µ gets larger, the average of µ-hat across tests where the null is rejected approaches the true value of µ.
+
+ we can see the power is relatively low when µ is smaller than 3, which means the proportion of times the null was rejected is low. Therefore, for µ smaller than 3, the number of samples with rejected null is relatively small. These sample means indeed have more variation and their average is more likely to deviate from the true mean. However, as µ gets bigger, there are more samples with rejected null, so the sample average of µ-hat becomes more stable and yields a more unbiased estimation of the true mean.
+
+ 
