@@ -15,7 +15,7 @@ hom_df=read_csv("data/homicide-data.csv") %>%
   mutate(city_state=str_c(city,", ", state)) %>%
   filter(city_state != "Tulsa, AL")
 ```
-
+## Problem 2
 ```{r}
 new_hom_data= hom_df %>%
   mutate(status=case_when(disposition=="Closed without arrest" ~ "unsolved",
@@ -63,5 +63,24 @@ prop_test %>%
     x = "City",
     y = "Est. Proportion of Unsolved Homicides"
   )
+
+```
+
+## Problem 3
+
+```{r}
+sim_mean = function(n=30, mu , sigma = 5) {
+  
+  sim_data = tibble(
+    x = rnorm(n, mean = mu, sd = sigma),
+  )
+  
+  t_test=t.test(sim_data,mu)
+  sim_data %>% 
+    summarize(
+      mu_hat = mean(x),
+      p_value= pull(broom::tidy(t_test,p.value))
+    )
+}
 
 ```
