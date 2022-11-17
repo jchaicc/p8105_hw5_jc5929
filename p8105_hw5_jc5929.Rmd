@@ -71,6 +71,8 @@ hom_df=read_csv("data/homicide-data.csv") %>%
 __Description on the raw dataset:__
 This dataset contains homicides data in 50 cities in the U.S. There were 12 variable describing the characteristics of each victim in the raw data, including their name, age, sex, and the disposition status. There were 52179 entries in total.
 
+There exists a "Tulsa , AL" in the data set, which might be a tying error or other error when entering the data. I have filtered out this row when tidying the data.
+
 ```{r}
 new_hom_data= hom_df %>%
   mutate(status=case_when(disposition=="Closed without arrest" ~ "unsolved",
